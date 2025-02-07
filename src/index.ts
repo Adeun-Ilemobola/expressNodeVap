@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import {addDays} from "./Utility";
 import connectToDatabase from "./Configure/db";
+import User from "./Configure/user";
 
 const app = express();
 const port = 3000;
@@ -64,6 +65,24 @@ app.post('/api/Login', (req, res) => {
 
 
 app.post('/api/updateUserNotes', (req, res) => {
+
+})
+
+app.post('/api/testUser', async (req, res) => {
+    try{
+      const user =  await  User.create({
+
+            username: "test",
+            email: "test@test.com",
+            password: "testdsfsdfdsfsd",
+
+        })
+        res.status(200).send(user)
+
+
+    }catch(err){
+        console.log(err);
+    }
 
 })
 

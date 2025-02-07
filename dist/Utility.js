@@ -12,7 +12,7 @@ function idGenerator(length = 10) {
     let id = "";
     while (segment < 3) {
         for (let i = 0; i < length; i++) {
-            id += alphabet[minMax(0, alphabet.length - 1)];
+            id += alphabet.charAt(minMax(0, alphabet.length - 1));
         }
         if (segment < 2) {
             id += '-';
