@@ -16,6 +16,7 @@
   "description": "",
   "dependencies": {
     "@types/crypto-js": "^4.2.2",
+    "bson": "^6.10.2",
     "crypto-js": "^4.2.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
