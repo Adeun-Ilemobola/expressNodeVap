@@ -1,13 +1,8 @@
-# Default ignored files
-/shelf/
-/workspace.xml
-# Editor-based HTTP Client requests
-/httpRequests/
-# Datasource local storage ignored files
-/dataSources/
-/dataSources.local.xml
- Node modules
+# Node modules
 node_modules/
+
+# Lockfiles - recommended to NOT ignore these, so don't list them here
+# e.g. package-lock.json, yarn.lock
 
 # Build outputs
 dist/
@@ -25,11 +20,16 @@ yarn-error.log*
 # IDE files
 .idea/
 *.iml
+.vscode/
 
-# System files
+# OS metadata
 .DS_Store
 Thumbs.db
 
-# Optional: HTTP Client requests and local data sources (from screenshot)
+# Editor-based HTTP Client & data sources
 httpRequests/
 dataSources.local.xml
+
+# JetBrains default
+/shelf/
+/workspace.xml
