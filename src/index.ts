@@ -163,6 +163,9 @@ app.post('/api/Login', async (req, res) => {
             res.status(400).send({error: "Invalid password is not a much", data: null});
             return;
         }
+        await Session.deleteMany({
+            "user.id": getUser.customId
+        })
 
 
 //     the user is a much create a session to back to the user
@@ -181,9 +184,7 @@ app.post('/api/Login', async (req, res) => {
             res.status(400).send({error: "Invalid Session can not be make ", data: null});
             return;
         }
-        await Session.deleteMany({
-            "user.id": getUser.customId
-        })
+
         res.status(201).send({
             error: null, data: {
                 user: {...newSession.user},
