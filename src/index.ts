@@ -9,6 +9,7 @@ import CryptoJS from "crypto-js";
 import Session from "./Configure/Session";
 import Note from "./Configure/Note";
 import folder from "./Configure/Folder";
+import Folder from "./Configure/Folder";
 
 type INote = {
     customId: string;
@@ -180,6 +181,9 @@ app.post('/api/Login', async (req, res) => {
             res.status(400).send({error: "Invalid Session can not be make ", data: null});
             return;
         }
+        await Session.deleteMany({
+            "user.id": getUser.customId
+        })
         res.status(201).send({
             error: null, data: {
                 user: {...newSession.user},
@@ -197,116 +201,68 @@ app.post('/api/Login', async (req, res) => {
 
 });
 
-app.post('/api/UpdateUserData', async (req, res) => {
-    const body = req.body as changeDispatcher;
-    if (!body) {
-        res.status(400).send({error: "Invalid body", data: null});
-    }
-    try{
-        const {userID, userNote, userFolder} = body;
+app.post('/api/userCollection',async (req, res) => {
+    try {
+        const {userID} = req.body as {userID:string};
+        if (!userID) {
+            res.status(401).send({error: "Invalid Credentials", data: null});
+            return;
+        }
 
-
-        const notePromises =  userNote.map(async (value, key) => {
-            const {data} = value;
-
-            if (value.method === "add") {
-               return  Note.create({
-                    text: data.text,
-                    folderID: data.folderID,
-                    title: data.title,
-                    userID: userID,
-
-
-                })
-
-            } else if (value.method == "delete") {
-                return Note.findOneAndDelete({
-                    customId: data.customId
-                })
-
-
-            } else if (value.method == "update") {
-                return Note.findOneAndUpdate({
-                        customId: data.customId,
-                    },
-                    {
-                        text:data.text,
-                        title:data.title
-                    }
-                )
-
-            }
-
-
-
-        })
-
-        const folderPromises =userFolder.map(async (value, key) => {
-            const {data} = value;
-
-            if (value.method === "add") {
-                return   folder.create({
-                    name: data.name,
-                    userID: userID,
-
-                })
-
-            } else if (value.method == "delete") {
-                return folder.findOneAndDelete({
-                    customId: data.customId
-                })
-
-
-            } else if (value.method == "update") {
-                return folder.findOneAndUpdate({
-                        customId: data.customId,
-                    },
-                    {
-                        name:data.name,
-                    }
-                )
-
-            }
-
-
-        })
-
-        await Promise.all([...notePromises, ...folderPromises]);
-
-        const getNote = await Note.find({
-            userID: userID
+        const note = await Note.find({
+            userId: userID
         },{
             customId: 1,
             text:1,
-            folderID: 1,
-            userID: 1,
             title:1,
-            _id:0,
+            folderID: 1,
+            userId: 1,
+            _id:0
         })
 
-        const getFolder = await folder.find({
-            userID: userID
+        const  folder = await Folder.find({
+            userId: userID
+
         },{
             customId: 1,
-             name:1,
-            _id:0,
+            name:1,
             userID: 1,
         })
 
+
+        const NoteFormat = note.map(op=>{
+            return {
+                id:op.customId,
+                userId:op.userId,
+                text:op.text,
+                folderID:op.folderID,
+                name:op.title,
+            }
+        })
+
+
+        const FolderFormat = folder.map(op=>{
+            return {
+                id:op.customId,
+                userId:op.userId,
+                name:op.name,
+            }
+        })
+
+
         res.status(200).json({error: null, data: {
-                notes:getNote,
-                folders:getFolder,
+                notesA:NoteFormat,
+                folderA:FolderFormat,
             }})
+
+
 
     }catch(err){
         console.log(err)
-        res.status(500).send({error: "Unable to register", data: null});
+        res.status(500).send({error: "something went wrong", data: null});
+
+
     }
-
-
-
-})
-app.post('/api/updateUserNotes', (req, res) => {
 
 })
 
