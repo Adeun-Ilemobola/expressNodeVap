@@ -8,7 +8,6 @@ import CryptoJS from "crypto-js";
 
 import Session from "./Configure/Session";
 import Note from "./Configure/Note";
-import folder from "./Configure/Folder";
 import Folder from "./Configure/Folder";
 
 type INote = {
@@ -267,6 +266,34 @@ app.post('/api/userCollection',async (req, res) => {
 
 })
 
+app.post('/api/userFolder',async (req, res) => {
+    try{
+        const body = req.body as {userID:string , method:"add" | "update"|"delete" , name:string,};
+        if  (!body) {
+            res.status(401).send({error: "Invalid Credentials", data: null});
+        }
+        const {userID , method , name} = body;
+
+        if (!userID || !method ) {
+            res.status(401).send({error: "Invalid Credentials", data: null});
+        }
+
+        if (method === "add") {
+           const op= await Folder.create({
+                userID: userID,
+                name: name,
+            })
+
+            if (op){
+                res.status(201).send({error: null, data: "successfully added folder:" +op.name })
+            }
+
+        }
+
+    }catch(err){
+        res.status(500).send({error: "Invalid Credentials", data: null});
+    }
+})
 app.post('/api/testUser', async (req, res) => {
     try {
         const user = await User.create({
