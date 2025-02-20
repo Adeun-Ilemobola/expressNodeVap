@@ -308,23 +308,37 @@ app.post('/api/userFolder',async (req, res) => {
         return;
     }
 })
-app.post('/api/testUser', async (req, res) => {
-    try {
-        const user = await User.create({
+app.post('/api/userNote',async (req, res) => {
+    try{
+        const body = req.body as {userID:string , method:"add" | "update"|"delete" , name:string,folderID:string};
+        console.log(body);
+        if  (!body) {
+            console.log(" the post body is incorrect")
+            res.status(401).send({error: "Invalid Credentials", data: null});
+            return;
+        }
+        const {userID , method , name ,folderID} = body;
 
-            username: "test",
-            email: "test@test.com",
-            password: "testdsfsdfdsfsd",
 
-        })
-        res.status(200).send(user)
+        if (method === "add") {
+            const op= await Note.create({
+                userId:userID,
+                title:name,
+                text:" ",
+                folderID:folderID
+            })
 
+            if (op){
+                res.status(201).send({error: null, data: "successfully added folder:" +op.name })
+            }
 
-    } catch (err) {
-        console.log(err);
-        res.status(500).send({error: "something went wrong", data: null});
+        }
+
+    }catch(err){
+        console.log(err)
+        res.status(500).send({error: "Invalid Credentials", data: null});
+        return;
     }
-
 })
 
 
