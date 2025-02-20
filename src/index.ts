@@ -329,7 +329,10 @@ app.post('/api/userNote',async (req, res) => {
             })
 
             if (op){
-                res.status(201).send({error: null, data: "successfully added folder:" +op.name })
+                res.status(201).send({error: null, data: "successfully added note:" +op.title })
+                return;
+            }else {
+                res.status(401).send({error: "something went wrong", data: null});
             }
 
         }
