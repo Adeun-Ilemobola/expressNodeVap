@@ -280,14 +280,14 @@ app.post('/api/userCollection',async (req, res) => {
 
 app.post('/api/userFolder',async (req, res) => {
     try{
-        const body = req.body as {userID:string , method:"add" | "update"|"delete" , name:string,};
+        const body = req.body as {userID:string , method:"add" | "update"|"delete" , name:string, id:string };
         console.log(body);
         if  (!body) {
             console.log(" the post body is incorrect")
             res.status(401).send({error: "Invalid Credentials", data: null});
             return;
         }
-        const {userID , method , name} = body;
+        const {userID , method , name , id} = body;
 
 
         if (method === "add") {
@@ -300,6 +300,17 @@ app.post('/api/userFolder',async (req, res) => {
                 res.status(201).send({error: null, data: "successfully added folder:" +op.name })
             }
 
+        }else if(method === "update") {
+            await Folder.findOneAndUpdate({
+                customId:id
+            },
+                {
+                    name: name,
+                })
+        }else if(method === "delete") {
+            await Folder.findOneAndDelete({
+                customId:id
+            })
         }
 
     }catch(err){
@@ -310,14 +321,14 @@ app.post('/api/userFolder',async (req, res) => {
 })
 app.post('/api/userNote',async (req, res) => {
     try{
-        const body = req.body as {userID:string , method:"add" | "update"|"delete" , name:string,folderID:string};
+        const body = req.body as {userID:string , method:"add" | "update"|"delete" , name:string, folderID:string , id:string , text:string};
         console.log(body);
         if  (!body) {
             console.log(" the post body is incorrect")
             res.status(401).send({error: "Invalid Credentials", data: null});
             return;
         }
-        const {userID , method , name ,folderID} = body;
+        const {userID , method , name ,folderID , id , text} = body;
 
 
         if (method === "add") {
@@ -335,7 +346,22 @@ app.post('/api/userNote',async (req, res) => {
                 res.status(401).send({error: "something went wrong", data: null});
             }
 
+        }else if (method === "update") {
+            await Note.findOneAndUpdate({
+                customId:id,
+            },
+                {
+                    text:text,
+                    title:name,
+                }
+            )
+
+        } else if (method === "delete") {
+            await Note.findOneAndDelete({
+                customId:id,
+            })
         }
+
 
     }catch(err){
         console.log(err)
