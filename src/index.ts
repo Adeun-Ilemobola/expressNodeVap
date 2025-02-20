@@ -153,13 +153,13 @@ app.post('/api/Login', async (req, res) => {
 
 //    compare the users password to the using found password hushed
         if (!getUser) {
-            res.status(400).send({error: "user not found", data: null});
+            res.status(401).send({error: "user not found", data: null});
             return;
         }
 
         const inputPassword = CryptoJS.SHA256(body.password).toString();
         if (inputPassword != getUser.password) {
-            res.status(400).send({error: "Invalid password is not a much", data: null});
+            res.status(401).send({error: "Invalid password is not a much", data: null});
             return;
         }
         await Session.deleteMany({
@@ -180,7 +180,7 @@ app.post('/api/Login', async (req, res) => {
         })
 
         if (!newSession) {
-            res.status(400).send({error: "Invalid Session can not be make ", data: null});
+            res.status(401).send({error: "Invalid Session can not be make ", data: null});
             return;
         }
 

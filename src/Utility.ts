@@ -2,7 +2,7 @@
 export function minMax(min: number = 0, max: number = 100) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
-
+// wsfdsdfgsdfgdfg-sdfgdgfsdfgsdfg-sdfgsdfgsdgsfdgs
 export function idGenerator(length: number = 10):string {
     const alphabet = "zxcvbnmlkjhgfdsaqwertyuiopZXCVBNMLKJHGFDSAQWERTYUIOP0987654321"
     let segment = 0;
