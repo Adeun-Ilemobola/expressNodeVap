@@ -322,6 +322,7 @@ app.post('/api/testUser', async (req, res) => {
 
     } catch (err) {
         console.log(err);
+        res.status(500).send({error: "something went wrong", data: null});
     }
 
 })
