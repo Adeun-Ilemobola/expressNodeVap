@@ -249,10 +249,22 @@ app.post('/api/userCollection',async (req, res) => {
             }
         })
 
+        const struct = FolderFormat.map(item=>{
+            const kid = NoteFormat.filter(note=>note.folderID===item.id)
+            return {
+                id:item.id,
+                name:item.name,
+                Children:[
+                    ...kid.map(child=>({id:child.id, name:child.name})),
+                ]
+            }
+        })
+
 
         res.status(200).json({error: null, data: {
                 notesA:NoteFormat,
                 folderA:FolderFormat,
+                struct:struct
             }})
 
 
@@ -269,19 +281,19 @@ app.post('/api/userCollection',async (req, res) => {
 app.post('/api/userFolder',async (req, res) => {
     try{
         const body = req.body as {userID:string , method:"add" | "update"|"delete" , name:string,};
+        console.log(body);
         if  (!body) {
+            console.log(" the post body is incorrect")
             res.status(401).send({error: "Invalid Credentials", data: null});
+            return;
         }
         const {userID , method , name} = body;
 
-        if (!userID || !method ) {
-            res.status(401).send({error: "Invalid Credentials", data: null});
-        }
 
         if (method === "add") {
            const op= await Folder.create({
-                userID: userID,
-                name: name,
+               userId:userID,
+               name:name,
             })
 
             if (op){
@@ -291,7 +303,9 @@ app.post('/api/userFolder',async (req, res) => {
         }
 
     }catch(err){
+        console.log(err)
         res.status(500).send({error: "Invalid Credentials", data: null});
+        return;
     }
 })
 app.post('/api/testUser', async (req, res) => {
