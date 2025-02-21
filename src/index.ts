@@ -346,6 +346,8 @@ app.post('/api/userNote',async (req, res) => {
                 res.status(401).send({error: "something went wrong", data: null});
             }
 
+            return;
+
         }else if (method === "update") {
            const updatedNote= await Note.findOneAndUpdate({
                 customId:id,
@@ -360,14 +362,23 @@ app.post('/api/userNote',async (req, res) => {
             )
             if (!updatedNote){
                  res.status(404).send({ error: "Note not found failed to update note", data: null });
+                return;
 
             }
             res.status(200).send({ error: null, data: updatedNote });
+            return;
 
         } else if (method === "delete") {
-            await Note.findOneAndDelete({
+         const  deletedNote = await Note.findOneAndDelete({
                 customId:id,
-            })
+            },{new: true})
+
+            if (!deletedNote){
+                res.status(401).send({error: "Field to delete notes", data: null});
+                return;
+            }
+            res.status(401).send({error: null, data: "successfully deleted note"})
+            return;;
         }
 
 
