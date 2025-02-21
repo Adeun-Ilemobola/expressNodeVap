@@ -347,14 +347,22 @@ app.post('/api/userNote',async (req, res) => {
             }
 
         }else if (method === "update") {
-            await Note.findOneAndUpdate({
+           const updatedNote= await Note.findOneAndUpdate({
                 customId:id,
             },
                 {
                     text:text,
                     title:name,
+                },
+                {
+                    new: true
                 }
             )
+            if (!updatedNote){
+                 res.status(404).send({ error: "Note not found failed to update note", data: null });
+
+            }
+            res.status(200).send({ error: null, data: updatedNote });
 
         } else if (method === "delete") {
             await Note.findOneAndDelete({
