@@ -1,0 +1,35 @@
+# Node modules
+node_modules/
+
+# Lockfiles - recommended to NOT ignore these, so don't list them here
+# e.g. package-lock.json, yarn.lock
+
+# Build outputs
+dist/
+*.tsbuildinfo
+
+# Environment variables
+.env
+.env.*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Editor-based HTTP Client & data sources
+httpRequests/
+dataSources.local.xml
+
+# JetBrains default
+/shelf/
+/workspace.xml

@@ -1,4 +1,4 @@
-import express from 'express';
+import express , { Request, Response, NextFunction , ErrorRequestHandler  } from 'express';
 import cors from 'cors';
 import {addDays, idGenerator} from "./Utility";
 import connectToDatabase from "./Configure/db";
@@ -9,6 +9,8 @@ import CryptoJS from "crypto-js";
 import Session from "./Configure/Session";
 import Note from "./Configure/Note";
 import Folder from "./Configure/Folder";
+import NotePath from './routes/NoteFile';
+import FolderPath from './routes/Folder';
 
 type INote = {
     customId: string;
@@ -278,117 +280,14 @@ app.post('/api/userCollection',async (req, res) => {
 
 })
 
-app.post('/api/userFolder',async (req, res) => {
-    try{
-        const body = req.body as {userID:string , method:"add" | "update"|"delete" , name:string, id:string };
-        console.log(body);
-        if  (!body) {
-            console.log(" the post body is incorrect")
-            res.status(401).send({error: "Invalid Credentials", data: null});
-            return;
-        }
-        const {userID , method , name , id} = body;
+app.post('/api/userFolder',FolderPath)
+app.post('/api/userNote', NotePath)
 
-
-        if (method === "add") {
-           const op= await Folder.create({
-               userId:userID,
-               name:name,
-            })
-
-            if (op){
-                res.status(201).send({error: null, data: "successfully added folder:" +op.name })
-            }
-
-        }else if(method === "update") {
-            await Folder.findOneAndUpdate({
-                customId:id
-            },
-                {
-                    name: name,
-                })
-        }else if(method === "delete") {
-            await Folder.findOneAndDelete({
-                customId:id
-            })
-        }
-
-    }catch(err){
-        console.log(err)
-        res.status(500).send({error: "Invalid Credentials", data: null});
-        return;
-    }
-})
-app.post('/api/userNote',async (req, res) => {
-    try{
-        const body = req.body as {userID:string , method:"add" | "update"|"delete" , name:string, folderID:string , id:string , text:string};
-        console.log(body);
-        if  (!body) {
-            console.log(" the post body is incorrect")
-            res.status(401).send({error: "Invalid Credentials", data: null});
-            return;
-        }
-        const {userID , method , name ,folderID , id , text} = body;
-
-
-        if (method === "add") {
-            const op= await Note.create({
-                userId:userID,
-                title:name,
-                text:" ",
-                folderID:folderID
-            })
-
-            if (op){
-                res.status(201).send({error: null, data: "successfully added note:" +op.title })
-                return;
-            }else {
-                res.status(401).send({error: "something went wrong", data: null});
-            }
-
-            return;
-
-        }else if (method === "update") {
-           const updatedNote= await Note.findOneAndUpdate({
-                customId:id,
-            },
-                {
-                    text:text,
-                    title:name,
-                },
-                {
-                    new: true
-                }
-            )
-            if (!updatedNote){
-                 res.status(404).send({ error: "Note not found failed to update note", data: null });
-                return;
-
-            }
-            res.status(200).send({ error: null, data: updatedNote });
-            return;
-
-        } else if (method === "delete") {
-         const  deletedNote = await Note.findOneAndDelete({
-                customId:id,
-            },{new: true})
-
-            if (!deletedNote){
-                res.status(401).send({error: "Field to delete notes", data: null});
-                return;
-            }
-            res.status(401).send({error: null, data: "successfully deleted note"})
-            return;;
-        }
-
-
-    }catch(err){
-        console.log(err)
-        res.status(500).send({error: "Invalid Credentials", data: null});
-        return;
-    }
-})
-
+function logger(req: Request, res: Response, next: NextFunction) {
+    console.log(`[${new Date().toISOString()}] ${req.method} - ${req.url}`);
+    next();
+}
+app.use(logger);
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
