@@ -48,7 +48,7 @@ NotePath.put('/:id', async (req, res , next) => {
             name,}
         );
         
-        if (!(id && userID && text)){
+        if (!(id || userID || text)){
             res.status(401).send({error: "Invalid Credentials", data: null});
         }
 
