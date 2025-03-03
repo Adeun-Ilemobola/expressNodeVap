@@ -41,6 +41,13 @@ NotePath.put('/:id', async (req, res , next) => {
     try {
         const {id} = req.params;
         const {userID , text,   name} = req.body as {userID:string , text:string, name :string} ;
+        console.log(
+            id,
+           { userID,
+            text,
+            name,}
+        );
+        
         if (!(id && userID && text)){
             res.status(401).send({error: "Invalid Credentials", data: null});
         }
