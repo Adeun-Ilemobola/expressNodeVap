@@ -66,6 +66,8 @@ NotePath.put('/:id', async (req, res , next) => {
         res.status(200).send({error: null, data: "successfully updated"});
 
     }catch(err){
+        console.log(err)
+        next();
 
     }
 

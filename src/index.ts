@@ -24,12 +24,6 @@ type IFolder = {
 
 }
 
-type changeDispatcher = {
-    userID: string,
-    userNote: { method: "add" | "delete" | "update", data: INote }[],
-    userFolder: { method: "add" | "delete" | "update", data: IFolder }[],
-
-}
 const app = express();
 const port = 3000;
 connectToDatabase()
@@ -49,7 +43,7 @@ app.get('/', async (req, res) => {
 });
 
 app.post('/api/Session', async (req, res) => {
-    console.log(" session validating endpoint")
+    // console.log(" session validating endpoint")
 
     const body: session | null = req.body;
     console.log(body);
@@ -71,9 +65,9 @@ app.post('/api/Session', async (req, res) => {
                 const item = await Session.deleteOne({
                     id: getSession.customId
                 })
-                console.log(" there is no user and there's a session ", item)
+                // console.log(" there is no user and there's a session ", item)
             }
-            console.log({error: "User not found", data: null})
+            // console.log({error: "User not found", data: null})
             res.status(404).send({error: "User not found", data: null});
 
 
@@ -81,7 +75,7 @@ app.post('/api/Session', async (req, res) => {
         }
 
         if (!getSession) {
-            console.log({error: "Session not found", data: null})
+            // console.log({error: "Session not found", data: null})
             res.status(404).send({error: "Session not found", data: null});
             return;
         }
@@ -92,12 +86,10 @@ app.post('/api/Session', async (req, res) => {
         console.log(sessionDate > Date)
 
         if (Date.toMillis() >= sessionDate.toMillis()) {
-            console.log("Invalid session expired")
             res.status(400).send({error: "Invalid session expired", data: null});
 
             return;
         }
-        console.log(" the current session is validated. It is active.")
         res.status(200).send({error: null, data: body});
 
 
@@ -111,13 +103,12 @@ app.post('/api/Session', async (req, res) => {
 
 });
 app.post('/api/Register', async (req, res) => {
-    console.log("Register endPoint")
     const body = req.body;
     if (!body) {
         res.status(401).send({error: "Invalid body", data: null});
         return;
     }
-    console.log(body)
+   
     try {
         const user = await User.create({
             email: body.email,
@@ -139,7 +130,7 @@ app.post('/api/Register', async (req, res) => {
 
 })
 app.post('/api/Login', async (req, res) => {
-    console.log("Login endPoint")
+
     try {
         const body: { username: string, password: string } | null = req.body;
         console.log(body);
