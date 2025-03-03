@@ -40,7 +40,7 @@ NotePath.get('/', async (req, res , next) => {
 NotePath.put('/:id', async (req, res , next) => {
     try {
         const {id} = req.params;
-        const {userID , text, folderID ,  name} = req.body as {userID:string , text:string, folderID:string , name :string} ;
+        const {userID , text,   name} = req.body as {userID:string , text:string, name :string} ;
         if (!(id && userID && text)){
             res.status(401).send({error: "Invalid Credentials", data: null});
         }
@@ -50,7 +50,6 @@ NotePath.put('/:id', async (req, res , next) => {
             userId:userID,
         },{
             text:text,
-            folderID:folderID,
             name:name,
             },
             {
