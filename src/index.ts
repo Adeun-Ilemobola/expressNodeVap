@@ -46,7 +46,7 @@ app.post('/api/Session', async (req, res) => {
     // console.log(" session validating endpoint")
 
     const body: session | null = req.body;
-    console.log(body);
+    
     if (!body) {
         res.status(404).send({error: "Invalid session", data: null});
         return;
@@ -82,8 +82,7 @@ app.post('/api/Session', async (req, res) => {
 
         const Date = DateTime.now();
         const sessionDate = DateTime.fromISO(getSession.expire)
-        console.log(sessionDate.toISO(), Date.toISO())
-        console.log(sessionDate > Date)
+       
 
         if (Date.toMillis() >= sessionDate.toMillis()) {
             res.status(400).send({error: "Invalid session expired", data: null});
@@ -94,7 +93,7 @@ app.post('/api/Session', async (req, res) => {
 
 
     } catch (err) {
-        console.log(" something went very wrong")
+
         console.log(err)
         res.status(500).send({error: "Invalid session", data: null});
 
@@ -186,8 +185,9 @@ app.post('/api/Login', async (req, res) => {
         });
 
     } catch (err) {
-        res.status(500).send({error: "Unable to login", data: null});
         console.log(err)
+
+        res.status(500).send({error: "Unable to login", data: null});
         return;
     }
 
