@@ -271,8 +271,8 @@ app.post('/api/userCollection',async (req, res) => {
 
 })
 
-app.post('/api/userFolder',FolderPath)
-app.post('/api/userNote', NotePath)
+app.use('/api/userFolder',FolderPath)
+app.use('/api/userNote', NotePath)
 
 function logger(req: Request, res: Response, next: NextFunction) {
     console.log(`[${new Date().toISOString()}] ${req.method} - ${req.url}`);
