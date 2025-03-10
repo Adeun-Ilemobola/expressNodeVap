@@ -22,12 +22,14 @@
     "express": "^4.21.2",
     "luxon": "^3.5.0",
     "mongoose": "^8.10.1",
+    "morgan": "^1.10.0",
     "tslib": "^2.8.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/luxon": "^3.4.2",
+    "@types/morgan": "^1.9.9",
     "@types/node": "^22.13.1",
     "cors": "^2.8.5",
     "nodemon": "^3.1.9",
