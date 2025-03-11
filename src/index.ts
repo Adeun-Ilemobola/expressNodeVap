@@ -32,8 +32,6 @@ connectToDatabase()
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors())
-
-
 app.use(morgan('dev'));
 
 type session = {
@@ -94,6 +92,8 @@ app.post('/api/Session', async (req, res) => {
 
             return;
         }
+        console.log("updating session");
+        
         const newSession:session ={
             user: {
                 username: ActiveUser.username,
