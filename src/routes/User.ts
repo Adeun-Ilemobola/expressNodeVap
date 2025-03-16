@@ -66,6 +66,15 @@ UserRoute.put('/:id', async (req, res, next) => {
 
           if (body.isNewpassword){
                console.log("New password");
+               console.log({
+                    "body.oldPassword && getUser.password" :body.oldPassword && getUser.password,
+                    "CryptoJS.SHA256(body.oldPassword).toString() === getUser.password" : CryptoJS.SHA256(body.oldPassword).toString() === getUser.password,
+                    "body.passwordConfirm !== body.newPassword":body.passwordConfirm !== body.newPassword
+
+
+
+               });
+               
                if (body.oldPassword && getUser.password){
                     if ( CryptoJS.SHA256(body.oldPassword).toString() === getUser.password) {
                          console.log("This is the same password");
