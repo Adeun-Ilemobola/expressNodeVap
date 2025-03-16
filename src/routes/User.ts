@@ -27,7 +27,10 @@ UserRoute.get('/:id', async (req, res, next) => {
 
           }
 
-          res.status(200).send({ error: null, data: CurUser })
+          res.status(200).send({ error: null, data: {
+               username: CurUser.username,
+               email: CurUser.email,
+          } })
 
           return;
 
