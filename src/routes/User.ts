@@ -14,11 +14,6 @@ UserRoute.get('/:id', async (req, res, next) => {
           }
           const CurUser = await user.findOne({
                customId: id,
-          }, {
-               customId: 1,
-               username: 1,
-               _id: 0
-
           }
           )
           if (!CurUser) {
@@ -30,6 +25,7 @@ UserRoute.get('/:id', async (req, res, next) => {
           res.status(200).send({ error: null, data: {
                username: CurUser.username,
                email: CurUser.email,
+               
           } })
 
           return;
