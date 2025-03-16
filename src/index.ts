@@ -55,18 +55,14 @@ app.post('/api/Session', async (req, res) => {
         return;
     }
     try {
-        const ActiveUser = await User.findOne({
-            customId: body.user.id,
-
-        })
-        const getSession = await Session.findOne({
-            customId: body.id
-        })
+        const [ActiveUser, getSession] = await Promise.all([
+            User.findOne({ customId: body.user.id }),
+            Session.findOne({ customId: body.id })
+        ]);
         if (!ActiveUser) {
             if (getSession) {
-
                 const item = await Session.deleteOne({
-                    id: getSession.customId
+                    customId: getSession.customId
                 })
                 // console.log(" there is no user and there's a session ", item)
             }
@@ -83,13 +79,11 @@ app.post('/api/Session', async (req, res) => {
             return;
         }
 
-        const Date = DateTime.now();
+        const DateNow = DateTime.now();
         const sessionDate = DateTime.fromISO(getSession.expire)
 
-
-        if (Date.toMillis() >= sessionDate.toMillis()) {
-            res.status(400).send({ error: "Invalid session expired", data: null });
-
+        if (DateNow.toMillis() >= sessionDate.toMillis()) {
+            res.status(400).send({ error: "session expired", data: null });
             return;
         }
         console.log("updating session");
@@ -101,7 +95,7 @@ app.post('/api/Session', async (req, res) => {
                 id: ActiveUser.customId
             },
             id: getSession.customId,
-            expire: sessionDate.toFormat('yyyy-MM-dd HH:mm:ss')
+            expire: sessionDate.toUTC().toFormat('yyyy-MM-dd HH:mm:ss')
 
         }
         res.status(200).send({ error: null, data: newSession });
@@ -109,8 +103,8 @@ app.post('/api/Session', async (req, res) => {
 
     } catch (err) {
 
-        console.log(err)
-        res.status(500).send({ error: "Invalid session", data: null });
+        console.error("Session validation error:", err);
+        res.status(500).send({ error: "Internal server error", data: null });    
 
     }
 
@@ -149,7 +143,7 @@ app.post('/api/Login', async (req, res) => {
         const body: { username: string, password: string } | null = req.body;
         console.log(body);
         if (!body) {
-            res.status(401).send({ error: "Invalid Credentials", data: null });
+            res.status(400).send({ error: "Invalid request payload", data: null });
             return;
         }
         //     verify the user exist
