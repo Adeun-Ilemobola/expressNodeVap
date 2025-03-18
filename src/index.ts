@@ -112,6 +112,8 @@ app.post('/api/Session', async (req, res) => {
 });
 app.post('/api/Register', async (req, res) => {
     const body = req.body;
+    console.log(body);
+    
     if (!body) {
         res.status(401).send({ error: "Invalid body", data: null });
         return;
@@ -138,9 +140,11 @@ app.post('/api/Register', async (req, res) => {
             name: body.name,
         })
         if (!user) {
-            res.status(400).send({ error: "Invalid user the user end ", data: null });
+            res.status(401).send({ error: "Invalid user the user en ", data: null });
+            return;
         }
-        res.status(201).json({ message: "User registered successfully", data: user });
+        res.status(200).json({ message: "User registered successfully", data: user });
+        return;
 
 
     } catch (err) {
