@@ -120,17 +120,19 @@ app.post('/api/Register', async (req, res) => {
     }
 
     try {
-        const existingUser = await User.findOne({
+        const existingUserByEmail = await User.findOne({
             email: body.email,
-            username:body.username
+            
+        } ) 
+        const existingUserByUserName = await User.findOne({
+            username: body.username,
+            
         } ) 
 
-        if (existingUser){
+        if (existingUserByEmail  || existingUserByUserName) {
             res.status(401).send({ error: "User already exists", data: null });
             return;
         }
-
-
 
 
         const user = await User.create({
