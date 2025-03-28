@@ -88,7 +88,7 @@ http://localhost:5000
 ### Session Routes
 - **GET /session**: Validate the current session.
 - **POST /session/login**: Log the user in.
-- **DELETE /session/logout**: Log the user out.
+
 
 ---
 
